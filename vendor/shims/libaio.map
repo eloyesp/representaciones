@@ -1,0 +1,13 @@
+LIBAIO_0.1 {
+  global:
+    io_submit;
+    io_destroy;
+  local:
+    *;
+};
+
+LIBAIO_0.4 {
+  global:
+    io_setup;
+    io_getevents;
+} LIBAIO_0.1;

@@ -31,3 +31,7 @@ database.yml
 *.bak
 webrat.log
 
+# gem bundle (local, not useful in the repo; contains local source patches
+# that must be re-applied after a clean `bundle install`)
+vendor/bundle
+

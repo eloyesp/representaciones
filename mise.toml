@@ -1,0 +1,18 @@
+[tools]
+mysql = "8.0.46"
+ruby = "2.3.8"
+
+[env]
+# GCC 16 (and newer) treat old C empty-paren arg errors as fatal and
+# promote several C99-era warnings to errors. These downgrade them.
+CFLAGS = "-std=gnu99 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=implicit-int -Wno-error=discarded-qualifiers -Wno-error=sizeof-array-div"
+RUBY_CFLAGS = "-std=gnu99 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration -Wno-error=int-conversion -Wno-error=implicit-int -Wno-error=discarded-qualifiers -Wno-error=sizeof-array-div"
+
+# MySQL 8 binaries (bundled via mise) need libaio/libnuma, which this host
+# does not ship; the stubs in vendor/shims provide the required symbols.
+# vendor/mysql57/lib holds an era-correct MySQL 5.7 client library
+# (libmysqlclient.so.20, no OpenSSL dependency) used by the rebuilt mysql2.
+# It avoids the segfault that the MySQL 8 / MariaDB 12 client libs (OpenSSL-3)
+# trigger inside mysql_native_password auth when Ruby's bundled OpenSSL 1.0
+# is also loaded in the same process.
+LD_LIBRARY_PATH = "{{config_root}}/vendor/shims:{{config_root}}/vendor/mysql57/lib"
