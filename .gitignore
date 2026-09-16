@@ -35,3 +35,7 @@ webrat.log
 # that must be re-applied after a clean `bundle install`)
 vendor/bundle
 
+###########################
+# nueva app (Rails 8), clonada en rails8/
+rails8/
+
