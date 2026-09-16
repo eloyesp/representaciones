@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Restaura tmp/dump.sql.gz (snapshot de representaciones_production, MariaDB
+# 10.0.38) en la base de desarrollo local (representaciones_development, puerto
+# 13307). Después de correrlo, `bundle exec rails s` muestra los datos de
+# producción hasta la fecha del dump.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DUMP="$ROOT/tmp/dump.sql.gz"
+
+MARIADB_BASE="${MARIADB_BASE:-$HOME/.local/share/mariadb-100}"
+MARIADB_BIN="$MARIADB_BASE/bin"
+MARIADB_LIB="$MARIADB_BASE/lib"
+
+PORT=13307
+DB=representaciones_development
+DB_USER=representaciones
+DB_PASS=representaciones
+
+MYSQL_OPTS=(-h 127.0.0.1 -P "$PORT" -u "$DB_USER")
+export MYSQL_PWD="$DB_PASS"
+export LD_LIBRARY_PATH="$ROOT/vendor/shims:$MARIADB_LIB"
+
+if [[ ! -f "$DUMP" ]]; then
+  echo "error: no encuentro $DUMP" >&2
+  exit 1
+fi
+
+echo "== Servidor MariaDB (puerto $PORT)"
+if "$MARIADB_BIN/mysqladmin" "${MYSQL_OPTS[@]}" ping >/dev/null 2>&1; then
+  echo "   ya está corriendo"
+else
+  echo "   arrancando el servidor"
+  mkdir -p "$ROOT/tmp/mariadb-data"
+  setsid "$MARIADB_BIN/mysqld" --no-defaults \
+    --basedir="$MARIADB_BASE" \
+    --datadir="$ROOT/tmp/mariadb-data" \
+    --socket="$ROOT/tmp/mariadb.sock" \
+    --port="$PORT" \
+    --bind-address=127.0.0.1 \
+    --pid-file="$ROOT/tmp/mariadb.pid" \
+    --log-error="$ROOT/tmp/mariadb.log" \
+    --innodb-use-native-aio=0 >/dev/null 2>&1 &
+  for _ in {1..30}; do
+    if "$MARIADB_BIN/mysqladmin" "${MYSQL_OPTS[@]}" ping >/dev/null 2>&1; then
+      break
+    fi
+    sleep 1
+  done
+fi
+
+if ! "$MARIADB_BIN/mysqladmin" "${MYSQL_OPTS[@]}" ping >/dev/null 2>&1; then
+  echo "error: el servidor no responde (revisa $ROOT/tmp/mariadb.log)" >&2
+  exit 1
+fi
+
+echo "== Recreando $DB"
+"$MARIADB_BIN/mysql" "${MYSQL_OPTS[@]}" -e \
+  "DROP DATABASE IF EXISTS $DB; CREATE DATABASE $DB CHARACTER SET utf8;"
+
+echo "== Restaurando $(basename "$DUMP") ($(du -h "$DUMP" | cut -f1), puede tardar)"
+zcat "$DUMP" | "$MARIADB_BIN/mysql" "${MYSQL_OPTS[@]}" "$DB"
+
+echo "== Tablas restauradas"
+"$MARIADB_BIN/mysql" "${MYSQL_OPTS[@]}" -N -e \
+  "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '$DB';"
+
+echo "Listo: la base de desarrollo ahora tiene los datos de producción."
