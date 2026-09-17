@@ -2,7 +2,6 @@ require 'test_helper'
 
 class CuentaTest < ActiveSupport::TestCase
 
-
   def test_monto_almacena_y_lexica_en_cents_y_moneda
     cents, currency = 35220, "ARS"
     cuenta = Cuenta.create!(entidad: entidads(:costa),

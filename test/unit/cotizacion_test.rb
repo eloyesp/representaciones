@@ -2,7 +2,6 @@ require 'test_helper'
 
 class CotizacionTest < ActiveSupport::TestCase
 
-
   def test_requiere_campos_obligatorios
     assert Cotizacion.new.invalid?
   end

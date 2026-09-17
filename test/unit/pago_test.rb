@@ -4,7 +4,6 @@ require 'test_helper'
 # insuficiente) and the presence constraints on the STI base.
 class PagoTest < ActiveSupport::TestCase
 
-
   def test_requiere_campos_obligatorios
     pago = Pago.new
     refute pago.valid?

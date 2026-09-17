@@ -2,7 +2,6 @@ require 'test_helper'
 
 class MovimientoTest < ActiveSupport::TestCase
 
-
   test "total agrupa los montos por moneda" do
     total = Movimiento.total([movimientos(:deposito_ibero),
                               movimientos(:deposito_vikingo)])
