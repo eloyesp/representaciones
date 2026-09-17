@@ -1,18 +1,76 @@
 <h1>Reserva <%= @reserva.id %>: <%= @reserva.referencia %></h1>
 
+<p><%= estado_reserva(@reserva) %></p>
+
+<h2>Datos</h2>
 <dl>
   <dt>Salida</dt>
   <dd><%= @reserva.salida %></dd>
   <dt>Operadora</dt>
-  <dd><%= @reserva.operadora.name %></dd>
+  <dd><%= @reserva.operadora&.name %></dd>
   <dt>Agencia</dt>
-  <dd><%= @reserva.agency.name %></dd>
+  <dd><%= @reserva.agency&.name %></dd>
+  <dt>Programa</dt>
+  <dd><%= @reserva.programa&.name %></dd>
+  <dt>Habitación</dt>
+  <dd><%= @reserva.thabitacion&.name %></dd>
   <dt>Hotel</dt>
   <dd><%= @reserva.hotel %></dd>
+  <dt>Periodo</dt>
+  <dd><%= @reserva.periodo %></dd>
+  <dt>Régimen</dt>
+  <dd><%= @reserva.regimen %></dd>
+  <dt>Voucher</dt>
+  <dd><%= @reserva.voucher %></dd>
   <dt>Total</dt>
   <dd><%= @reserva.total.format %></dd>
-  <dt>Pasajeros</dt>
-  <dd><%= @reserva.pasajeros.names.join(", ") %></dd>
+  <dt>Creada</dt>
+  <dd><%= @reserva.created_at %></dd>
+  <dt>Observaciones</dt>
+  <dd><%= @reserva.obs %></dd>
 </dl>
+
+<h2>Deudas</h2>
+<dl>
+  <dt>Agencia pagado</dt>
+  <dd><%= @reserva.agencia_pago.format %></dd>
+  <dt>Deuda agencia</dt>
+  <dd><%= @reserva.agencia_deuda.format %></dd>
+  <dt>Operadora pagado</dt>
+  <dd><%= @reserva.operadora_pago&.format %></dd>
+  <dt>Deuda operadora</dt>
+  <dd><%= @reserva.operadora_deuda&.format %></dd>
+</dl>
+
+<h2>Pasajeros</h2>
+<ul>
+  <% @reserva.pasajeros.each do |pasajero| %>
+    <li><%= pasajero.name %></li>
+  <% end %>
+</ul>
+
+<h2>Pagos</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Tipo</th>
+      <th>Número</th>
+      <th>Monto</th>
+      <th>Observaciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reserva.depositos.each do |deposito| %>
+      <tr>
+        <td><%= deposito.fecha %></td>
+        <td><%= deposito.tdeposito&.name %></td>
+        <td><%= deposito.numero %></td>
+        <td><%= deposito.monto_final.format %></td>
+        <td><%= deposito.observaciones %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to "Volver", reservas_path %>

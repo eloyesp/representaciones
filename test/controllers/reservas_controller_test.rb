@@ -15,6 +15,20 @@ class ReservasControllerTest < ActionDispatch::IntegrationTest
     assert_match /COSTA MAGICA/, response.body
   end
 
+  def test_index_filtra_por_operadora
+    get reservas_path, params: { operadora_id: entidads(:costa).id }
+    assert_response :success
+    assert_match /9331954/, response.body
+    assert_no_match /1346266/, response.body
+  end
+
+  def test_index_filtra_por_referencia
+    get reservas_path, params: { referencia: "9331954" }
+    assert_response :success
+    assert_match /9331954/, response.body
+    assert_no_match /1346266/, response.body
+  end
+
   def test_index_pagina
     20.times do
       Reserva.create!(salida: Date.today,
