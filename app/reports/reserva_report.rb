@@ -13,7 +13,7 @@ class ReservaReport < Prawn::Document
     # Header de la tabla
     myrowheader = [["ID","#","Pasajeros","Salida","Hotel","Programa","Total","Agencia" ,"Pagos","Deuda","Pagos O","Deuda O" ]]
 
-    bounding_box [0,690], :width => 500 do
+    bounding_box [0,690], :width => 576 do
 
       #hago una tabla por cada operadora
       datos.group_by(&:dia_creado).each do |fecha, operadoras|
@@ -34,17 +34,22 @@ class ReservaReport < Prawn::Document
 
             table(rows,{:row_colors => %w[e2f0fb ffffff],
                      :header => false,
-                     :column_widths =>{0=>60,
-                                      1=>20,
-                                      2=>60,
-                                      3=>50,
-                                      4=>50,
-                                      5=>60
-
+                     :column_widths =>{0=>47,
+                                      3=>46,
+                                      6=>60,
+                                      8=>60,
+                                      9=>60,
+                                      10=>60,
+                                      11=>60
                                       }})do
 
               row(0).style :background_color => '87b6d9', :text_color => '000000'
               cells.style :borders => []
+              column(6).style :align => :right
+              column(8).style :align => :right
+              column(9).style :align => :right
+              column(10).style :align => :right
+              column(11).style :align => :right
             end
 
           #despues de cada operadora se puede hacer un start_new_page que hace un salto de pagina o simplemente mover algunas posicion con move_down
