@@ -1,5 +1,6 @@
-include Layout
 class EntidadReport < Prawn::Document
+  include Layout
+  include InterFont
 
   def to_pdf(datos)
 

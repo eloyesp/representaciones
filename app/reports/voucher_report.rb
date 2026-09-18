@@ -1,5 +1,6 @@
 class VoucherReport < Prawn::Document
   include Layout
+  include InterFont
 
   def to_pdf(datos, params)
 
