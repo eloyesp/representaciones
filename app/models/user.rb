@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
 
-  # M2b/M4: port de devise (no esta en el Gemfile nuevo).
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
+  # M4 (basico): reemplazo de devise por has_secure_password.
+  has_secure_password
+
+  validates :username, presence: true, uniqueness: true
 
   has_many :permitions
   has_many :roles ,:through => :permitions

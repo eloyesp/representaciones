@@ -11,5 +11,14 @@ Rails.application.routes.draw do
 
   resources :reservas, only: %i[index show]
 
+  scope "reportes" do
+    get "reservas", to: "reports#reservas", as: :reportes_reservas
+    get "reservas/vouchers", to: "reports#vouchers", as: :reportes_vouchers
+  end
+
+  get "login" => "sessions#new", as: :login
+  post "login" => "sessions#create"
+  delete "login" => "sessions#destroy", as: :logout
+
   root "reservas#index"
 end

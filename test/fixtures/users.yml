@@ -15,3 +15,8 @@ tester: # usado para comprobar que los nombres de usuario son registrados
   email: tester@mentira.com
   encrypted_password: $2a$10$d68gcsjgZlnyJ3MdVdfg/u1q53lDkCzvrEezunD5yi/qlbj2uWz/S
   sign_in_count: 200
+
+dev: # login de desarrollo user/password
+  username: user
+  email: user@dev.local
+  password_digest: <%= BCrypt::Password.create("password", cost: 4) %>

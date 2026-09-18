@@ -1,7 +1,7 @@
-# coding: utf-8
-#Generado con vistas generator 2011-02-10 19:32:11 -0300 'lib/generators/vistas'
-include Layout
+# frozen_string_literal: true
+
 class ReservaReport < Prawn::Document
+  include Layout
 
   def regular(datos, params)
 
@@ -29,7 +29,8 @@ class ReservaReport < Prawn::Document
             rows = myrowheader
 
             reservas.each do|r|
-              rows += [["#{r.id}-#{r.try(:referencia)}","#{r.pasajeros.count}","#{r.titular}","#{r.salida}","#{r.hotel.to_s[0..15]}","#{r.programa.to_s[0..15]}","#{r.total.format}","#{r.agency.try(:name)}" ,"#{r.agencia_pago.format}","#{r.agencia_deuda.format}","#{r.operadora_pago.format}","#{r.operadora_deuda.format}"]]
+              pagos_o = r.operadora_pago&.format
+              rows += [["#{r.id}-#{r.try(:referencia)}","#{r.pasajeros.size}","#{r.titular}","#{r.salida}","#{r.hotel.to_s[0..15]}","#{r.programa&.name.to_s[0..15]}","#{r.total.format}","#{r.agency.try(:name)}" ,"#{r.agencia_pago.format}","#{r.agencia_deuda.format}","#{pagos_o}","#{pagos_o.present? ? r.operadora_deuda.format : ""}"]]
             end
 
             table(rows,{:row_colors => %w[e2f0fb ffffff],
@@ -125,7 +126,7 @@ informacion_de_busqueda(params)
 
   def format_titular_and_pasajeros_count(reserva)
     if reserva.titular
-      "#{reserva.titular.split(/,/)[0][0,8]}(#{reserva.pasajeros.count})"
+      "#{reserva.titular.split(/,/)[0][0,8]}(#{reserva.pasajeros.size})"
     else
       "sin pasajeros"
     end
@@ -160,4 +161,3 @@ informacion_de_busqueda(params)
     end
   end
 end
-

@@ -1,5 +1,11 @@
 <h1>Reservas</h1>
 
+<p>
+  <%= link_to "Listado PDF", reportes_reservas_path(params: request.query_parameters) %>
+  |
+  <%= link_to "Vouchers PDF", reportes_vouchers_path %>
+</p>
+
 <%= form_with url: reservas_path, method: :get do |form| %>
   <%= form.label :operadora_id, "Operadora" %>
   <%= form.collection_select :operadora_id, Operadora.all, :id, :name,

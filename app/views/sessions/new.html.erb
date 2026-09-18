@@ -1,0 +1,13 @@
+<h1>Iniciar sesión</h1>
+
+<% if flash[:alert] %>
+  <p><%= flash[:alert] %></p>
+<% end %>
+
+<%= form_with url: login_path, scope: :session do |form| %>
+  <%= form.label :username, "Usuario" %>
+  <%= form.text_field :username %>
+  <%= form.label :password, "Contraseña" %>
+  <%= form.password_field :password %>
+  <%= form.submit "Ingresar" %>
+<% end %>
