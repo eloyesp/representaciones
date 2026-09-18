@@ -1,6 +1,6 @@
 class ReservaReport < Prawn::Document
   include Layout
-  include InterFont
+  include ReportFont
 
   def regular(datos, params)
 
