@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "test_helper"
 
 # json 3.0 removed the positional options argument from JSON.parse while

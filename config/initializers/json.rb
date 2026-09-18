@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # json 3.0 removed the legacy positional `options` argument from JSON.parse
 # (signature became `parse(source, on_load:, object_class:, array_class:, **options)`),
 # but ActiveSupport 8.1.3.1 (ActiveSupport::JSON.decode) and other gems still pass
