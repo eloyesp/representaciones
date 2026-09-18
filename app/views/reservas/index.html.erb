@@ -9,10 +9,10 @@
 <%= form_with url: reservas_path, method: :get do |form| %>
   <%= form.label :operadora_id, "Operadora" %>
   <%= form.collection_select :operadora_id, Operadora.all, :id, :name,
-      { include_blank: "Todas" }, { value: params[:operadora_id] } %>
+      { include_blank: "Todas", selected: params[:operadora_id].presence } %>
   <%= form.label :agency_id, "Agencia" %>
   <%= form.collection_select :agency_id, Agency.all, :id, :name,
-      { include_blank: "Todas" }, { value: params[:agency_id] } %>
+      { include_blank: "Todas", selected: params[:agency_id].presence } %>
   <%= form.label :referencia, "Referencia" %>
   <%= form.text_field :referencia, value: params[:referencia] %>
   <%= form.submit "Filtrar" %>

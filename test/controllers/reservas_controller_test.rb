@@ -23,6 +23,7 @@ class ReservasControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match /9331954/, response.body
     assert_no_match /1346266/, response.body
+    assert_select 'select#operadora_id option[value=?][selected=selected]', entidads(:costa).id.to_s, 1
   end
 
   def test_index_filtra_por_referencia
