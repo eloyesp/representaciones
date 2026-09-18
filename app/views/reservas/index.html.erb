@@ -1,9 +1,14 @@
 <h1>Reservas</h1>
 
 <p>
-  <%= link_to "Listado PDF", reportes_reservas_path(params: request.query_parameters) %>
-  |
-  <%= link_to "Vouchers PDF", reportes_vouchers_path %>
+  <% if @pagy.count <= 300 %>
+    <%= link_to "Listado PDF", reportes_reservas_path(params: request.query_parameters) %>
+    |
+    <%= link_to "Vouchers PDF", reportes_vouchers_path(params: request.query_parameters) %>
+  <% else %>
+    <span class="disabled" title="Más de 300 reservas; refiná los filtros">Listado PDF</span>
+    <span class="disabled" title="Más de 300 reservas; refiná los filtros">Vouchers PDF</span>
+  <% end %>
 </p>
 
 <%= form_with url: reservas_path, method: :get do |form| %>

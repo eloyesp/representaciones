@@ -53,4 +53,23 @@ class ReservasControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "nav.pagy"
   end
+
+  def test_index_desactiva_reporte_si_hay_muchas_reservas
+    sign_in_as
+    Reserva.insert_all(
+      301.times.map do |i|
+        { salida: Date.today, total_cents: 100, total_currency: "USD",
+          thabitacion_id: thabitacions(:cuadruple).id,
+          programa_id: programas(:punta_del_este).id,
+          operadora_id: entidads(:costa).id,
+          agency_id: entidads(:litoraltur).id,
+          hidden: false, created_at: Time.current, updated_at: Time.current }
+      end
+    )
+
+    get reservas_path
+    assert_response :success
+    assert_select "span.disabled", count: 2
+    assert_select "a[href^='/reportes/reservas']", count: 0
+  end
 end
